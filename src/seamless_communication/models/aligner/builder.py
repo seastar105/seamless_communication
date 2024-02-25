@@ -155,6 +155,7 @@ class UnitY2AlignmentBuilder:
             dropout=cfg.dropout,
             temperature=cfg.temperature,
             reduction_factor=cfg.reduction_factor,
+            device=self.device,
             dtype=self.dtype,
         )
         alignment_encoder.training = training

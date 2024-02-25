@@ -14,7 +14,7 @@ import torch.nn.functional as F
 from fairseq2.data import CString
 from fairseq2.nn.embedding import StandardEmbedding
 from fairseq2.nn.padding import to_padding_mask
-from fairseq2.typing import DataType
+from fairseq2.typing import DataType, Device
 from torch import Tensor
 from torch.nn import Module
 
@@ -90,6 +90,7 @@ class UnitY2AlignmentEncoder(Module):
         dropout: float,
         temperature: float,
         reduction_factor: int,
+        device: Device,
         dtype: DataType,
     ):
         super().__init__()
@@ -101,7 +102,7 @@ class UnitY2AlignmentEncoder(Module):
             if i < text_layers - 1:
                 layers.append(
                     nn.Conv1d(
-                        embed_dim, embed_dim, kernel_size=3, padding=1, dtype=dtype
+                        embed_dim, embed_dim, kernel_size=3, padding=1, device=device, dtype=dtype
                     )
                 )
                 layers.append(nn.ReLU())
@@ -109,7 +110,7 @@ class UnitY2AlignmentEncoder(Module):
             else:
                 layers.append(
                     nn.Conv1d(
-                        embed_dim, embed_dim, kernel_size=1, padding=0, dtype=dtype
+                        embed_dim, embed_dim, kernel_size=1, padding=0, device=device, dtype=dtype
                     )
                 )
                 layers.append(nn.Dropout(p=dropout))
@@ -122,7 +123,7 @@ class UnitY2AlignmentEncoder(Module):
             if i < feat_layers - 1:
                 layers.append(
                     nn.Conv1d(
-                        input_dim, embed_dim, kernel_size=3, padding=1, dtype=dtype
+                        input_dim, embed_dim, kernel_size=3, padding=1, device=device, dtype=dtype
                     )
                 )
                 layers.append(nn.ReLU())
@@ -135,6 +136,7 @@ class UnitY2AlignmentEncoder(Module):
                         kernel_size=1,
                         padding=0,
                         stride=reduction_factor,
+                        device=device,
                         dtype=dtype,
                     )
                 )
